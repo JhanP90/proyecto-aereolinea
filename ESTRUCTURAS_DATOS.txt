@@ -1,0 +1,89 @@
+ESTRUCTURAS DE DATOS IMPLEMENTADAS EN EL PROYECTO
+==================================================
+
+1. LISTA ENLAZADA (ListaEnlazada.java)
+   - Ubicación: c:\Users\jhan pool\OneDrive\Desktop\Proyecto-aerolinea\src\ListaEnlazada.java
+   - Uso en GestionAerolinea.java:
+     * pasajeros: ListaEnlazada<Pasajero> - Almacena todos los pasajeros registrados
+     * vuelos: ListaEnlazada<Vuelo> - Almacena todos los vuelos registrados
+     * aviones: ListaEnlazada<Avion> - Almacena todos los aviones registrados
+     * reservasConfirmadas: ListaEnlazada<Reserva> - Almacena las reservas confirmadas
+   - Métodos principales:
+     * agregar(T dato) - Agrega un elemento al final de la lista
+     * obtener(int indice) - Obtiene un elemento por posición
+     * getTamaño() - Retorna la cantidad de elementos
+     * estaVacio() - Verifica si está vacía
+
+2. COLA (Cola.java)
+   - Ubicación: c:\Users\jhan pool\OneDrive\Desktop\Proyecto-aerolinea\src\Cola.java
+   - Uso en GestionAerolinea.java:
+     * reservasEnEspera: Cola<Reserva> - Almacena reservas en cola de espera (FIFO)
+   - Métodos principales:
+     * encolar(T elemento) - Agrega un elemento al final
+     * desencolar() - Elimina y retorna el primer elemento
+     * frente() - Obtiene el primer elemento sin eliminarlo
+     * estaVacia() - Verifica si está vacía
+   - Característica: FIFO (First In, First Out)
+
+3. PILA (Pila.java)
+   - Ubicación: c:\Users\jhan pool\OneDrive\Desktop\Proyecto-aerolinea\src\Pila.java
+   - Uso en GestionAerolinea.java:
+     * historialOperaciones: Pila<String> - Mantiene un historial de auditoría
+   - Métodos principales:
+     * apilar(T elemento) - Agrega un elemento en la cima
+     * desapilar() - Elimina y retorna el elemento en la cima
+     * cima() - Obtiene el elemento en la cima sin eliminarlo
+     * estaVacia() - Verifica si está vacía
+   - Característica: LIFO (Last In, First Out)
+   - Uso: Auditoría de operaciones realizadas
+
+4. ÁRBOL BINARIO DE BÚSQUEDA (ArbolBinario.java)
+   - Ubicación: c:\Users\jhan pool\OneDrive\Desktop\Proyecto-aerolinea\src\ArbolBinario.java
+   - Estructura disponible para futuras extensiones (búsquedas optimizadas)
+   - Métodos principales:
+     * insertar(T dato) - Inserta un elemento manteniendo el orden BST
+     * buscar(T dato) - Busca un elemento
+     * mostrarInOrden() - Muestra elementos en orden
+
+UBICACIÓN DE CADA ESTRUCTURA EN GestionAerolinea.java
+======================================================
+
+Líneas 1-6: Declaración de estructuras
+    - private ListaEnlazada<Pasajero> pasajeros;
+    - private ListaEnlazada<Vuelo> vuelos;
+    - private ListaEnlazada<Avion> aviones;
+    - private Cola<Reserva> reservasEnEspera;
+    - private ListaEnlazada<Reserva> reservasConfirmadas;
+    - private Pila<String> historialOperaciones;
+
+Líneas 8-15: Constructor - Inicialización de todas las estructuras
+    - new ListaEnlazada<>()
+    - new Cola<>()
+    - new Pila<>()
+
+Líneas 18-23: Métodos de PASAJEROS
+    - Usan: ListaEnlazada<Pasajero>
+    - Agregan operaciones al historial (Pila)
+
+Líneas 25-47: Métodos de AVIONES
+    - Usan: ListaEnlazada<Avion>
+    - Agregan operaciones al historial (Pila)
+
+Líneas 49-69: Métodos de VUELOS
+    - Usan: ListaEnlazada<Vuelo>
+    - Agregan operaciones al historial (Pila)
+
+Líneas 71-102: Métodos de RESERVAS
+    - Usan: ListaEnlazada<Reserva> (confirmadas)
+    - Usa: Cola<Reserva> (en espera)
+    - Agregan operaciones al historial (Pila)
+
+RESUMEN DE UBICACIÓN
+====================
+
+Estructura          Archivo                      Ubicación en GestionAerolinea
+----------          -------                      ----------------------------
+Lista Enlazada      ListaEnlazada.java          pasajeros, vuelos, aviones, reservasConfirmadas
+Cola                Cola.java                   reservasEnEspera
+Pila                Pila.java                   historialOperaciones
+Árbol Binario       ArbolBinario.java           Disponible para extensiones

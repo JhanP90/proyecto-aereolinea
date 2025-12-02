@@ -1,19 +1,21 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class GestionAerolinea {
-    private List<Pasajero> pasajeros;
-    private List<Vuelo> vuelos;
-    private List<Avion> aviones;
-    private List<Reserva> reservas;
+    private ListaEnlazada<Pasajero> pasajeros;      // Estructura: Lista Enlazada
+    private ListaEnlazada<Vuelo> vuelos;            // Estructura: Lista Enlazada
+    private ListaEnlazada<Avion> aviones;           // Estructura: Lista Enlazada
+    private Cola<Reserva> reservasEnEspera;         // Estructura: Cola (para espera)
+    private ListaEnlazada<Reserva> reservasConfirmadas; // Estructura: Lista Enlazada
+    private Pila<String> historialOperaciones;      // Estructura: Pila (para auditoría)
     private Random random;
 
     public GestionAerolinea() {
-        this.pasajeros = new ArrayList<>();
-        this.vuelos = new ArrayList<>();
-        this.aviones = new ArrayList<>();
-        this.reservas = new ArrayList<>();
+        this.pasajeros = new ListaEnlazada<>();
+        this.vuelos = new ListaEnlazada<>();
+        this.aviones = new ListaEnlazada<>();
+        this.reservasEnEspera = new Cola<>();
+        this.reservasConfirmadas = new ListaEnlazada<>();
+        this.historialOperaciones = new Pila<>();
         this.random = new Random();
     }
 
@@ -27,13 +29,16 @@ public class GestionAerolinea {
         String idPasajero = generarId("PAX");
         Pasajero nuevoPasajero = new Pasajero(idPasajero, nombre, apellido, cedula,
                 email, telefono, nacionalidad, edad);
-        pasajeros.add(nuevoPasajero);
+        pasajeros.agregar(nuevoPasajero);
+        String operacion = "REGISTRAR PASAJERO: " + idPasajero;
+        historialOperaciones.apilar(operacion);
         System.out.println("OK - Pasajero registrado. ID: " + idPasajero);
         return true;
     }
 
     public Pasajero obtenerPasajero(String idPasajero) {
-        for (Pasajero p : pasajeros) {
+        for (int i = 0; i < pasajeros.getTamaño(); i++) {
+            Pasajero p = pasajeros.obtener(i);
             if (p.getId().equals(idPasajero)) {
                 return p;
             }
@@ -42,13 +47,13 @@ public class GestionAerolinea {
     }
 
     public void listarPasajeros() {
-        if (pasajeros.isEmpty()) {
+        if (pasajeros.estaVacio()) {
             System.out.println("No hay pasajeros registrados");
             return;
         }
         System.out.println("\n===== LISTA DE PASAJEROS =====");
-        for (int i = 0; i < pasajeros.size(); i++) {
-            Pasajero p = pasajeros.get(i);
+        for (int i = 0; i < pasajeros.getTamaño(); i++) {
+            Pasajero p = pasajeros.obtener(i);
             System.out.println((i + 1) + ". " + p.getNombre() + " " + p.getApellido() +
                     " | ID: " + p.getId() + " | Cedula: " + p.getCedula());
         }
@@ -58,13 +63,16 @@ public class GestionAerolinea {
     public boolean registrarAvion(String modelo, String marca, int capacidadMaxima, int anoFabricacion) {
         String matricula = generarId("MAT").substring(0, 8);
         Avion nuevoAvion = new Avion(matricula, modelo, marca, capacidadMaxima, anoFabricacion);
-        aviones.add(nuevoAvion);
+        aviones.agregar(nuevoAvion);
+        String operacion = "REGISTRAR AVION: " + matricula;
+        historialOperaciones.apilar(operacion);
         System.out.println("OK - Avion registrado. Matricula: " + matricula);
         return true;
     }
 
     public Avion obtenerAvion(String matricula) {
-        for (Avion a : aviones) {
+        for (int i = 0; i < aviones.getTamaño(); i++) {
+            Avion a = aviones.obtener(i);
             if (a.getMatricula().equals(matricula)) {
                 return a;
             }
@@ -73,13 +81,13 @@ public class GestionAerolinea {
     }
 
     public void listarAviones() {
-        if (aviones.isEmpty()) {
+        if (aviones.estaVacio()) {
             System.out.println("No hay aviones registrados");
             return;
         }
         System.out.println("\n===== LISTA DE AVIONES =====");
-        for (int i = 0; i < aviones.size(); i++) {
-            Avion a = aviones.get(i);
+        for (int i = 0; i < aviones.getTamaño(); i++) {
+            Avion a = aviones.obtener(i);
             System.out.println((i + 1) + ". " + a.getMarca() + " " + a.getModelo() +
                     " | Matricula: " + a.getMatricula() + " | Capacidad: " + a.getCapacidadMaxima() +
                     " | Estado: " + a.getEstado());
@@ -99,13 +107,16 @@ public class GestionAerolinea {
         String idVuelo = generarId("VUE");
         Vuelo nuevoVuelo = new Vuelo(idVuelo, origen, destino, fechaSalida,
                 fechaLlegada, capacidad, precioPasaje, matriculaAvion);
-        vuelos.add(nuevoVuelo);
+        vuelos.agregar(nuevoVuelo);
+        String operacion = "REGISTRAR VUELO: " + idVuelo;
+        historialOperaciones.apilar(operacion);
         System.out.println("OK - Vuelo registrado. ID: " + idVuelo);
         return true;
     }
 
     public Vuelo obtenerVuelo(String idVuelo) {
-        for (Vuelo v : vuelos) {
+        for (int i = 0; i < vuelos.getTamaño(); i++) {
+            Vuelo v = vuelos.obtener(i);
             if (v.getId().equals(idVuelo)) {
                 return v;
             }
@@ -114,13 +125,13 @@ public class GestionAerolinea {
     }
 
     public void listarVuelos() {
-        if (vuelos.isEmpty()) {
+        if (vuelos.estaVacio()) {
             System.out.println("No hay vuelos registrados");
             return;
         }
         System.out.println("\n===== LISTA DE VUELOS =====");
-        for (int i = 0; i < vuelos.size(); i++) {
-            Vuelo v = vuelos.get(i);
+        for (int i = 0; i < vuelos.getTamaño(); i++) {
+            Vuelo v = vuelos.obtener(i);
             System.out.println((i + 1) + ". " + v.getOrigen() + " -> " + v.getDestino() +
                     " | ID: " + v.getId() + " | Salida: " + v.getFechaSalida() +
                     " | Asientos: " + v.getCapacidad());
@@ -144,33 +155,38 @@ public class GestionAerolinea {
 
         String idReserva = generarId("RES");
         Reserva nuevaReserva = new Reserva(idReserva, idPasajero, idVuelo);
-        reservas.add(nuevaReserva);
+        reservasConfirmadas.agregar(nuevaReserva);
         vuelo.setCapacidad(vuelo.getCapacidad() - 1);
+        String operacion = "HACER RESERVA: " + idReserva;
+        historialOperaciones.apilar(operacion);
         System.out.println("OK - Reserva confirmada. ID: " + idReserva);
         return true;
     }
 
     public void listarReservas() {
-        if (reservas.isEmpty()) {
+        if (reservasConfirmadas.estaVacio()) {
             System.out.println("No hay reservas registradas");
             return;
         }
         System.out.println("\n===== LISTA DE RESERVAS =====");
-        for (int i = 0; i < reservas.size(); i++) {
-            Reserva r = reservas.get(i);
+        for (int i = 0; i < reservasConfirmadas.getTamaño(); i++) {
+            Reserva r = reservasConfirmadas.obtener(i);
             System.out.println((i + 1) + ". ID: " + r.getId() + " | Pasajero: " + r.getIdPasajero() +
                     " | Vuelo: " + r.getIdVuelo() + " | Estado: " + r.getEstado());
         }
     }
 
     public void cancelarReserva(String idReserva) {
-        for (Reserva r : reservas) {
+        for (int i = 0; i < reservasConfirmadas.getTamaño(); i++) {
+            Reserva r = reservasConfirmadas.obtener(i);
             if (r.getId().equals(idReserva)) {
                 Vuelo vuelo = obtenerVuelo(r.getIdVuelo());
                 if (vuelo != null) {
                     vuelo.setCapacidad(vuelo.getCapacidad() + 1);
                 }
                 r.setEstado("CANCELADA");
+                String operacion = "CANCELAR RESERVA: " + idReserva;
+                historialOperaciones.apilar(operacion);
                 System.out.println("OK - Reserva cancelada");
                 return;
             }
